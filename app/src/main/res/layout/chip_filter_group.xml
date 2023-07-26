@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.chip.ChipGroup xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chipGroup"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:singleLine="true">
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_filter_fload"
+        style="@style/CustomChipChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkable="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="Banjir"
+        app:chipIconVisible="true" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_filter_fog"
+        style="@style/CustomChipChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkable="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="Kabut" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_filter_storm"
+        style="@style/CustomChipChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkable="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="Badai" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_filter_earth_quake"
+        style="@style/CustomChipChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkable="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="Gempa Bumi" />
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/chip_filter_forest_fires"
+        style="@style/CustomChipChoice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkable="true"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="Kebakaran Hutan" />
+
+</com.google.android.material.chip.ChipGroup>

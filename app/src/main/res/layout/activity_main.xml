@@ -7,6 +7,7 @@
     tools:context=".MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -27,12 +28,13 @@
             android:layout_marginTop="45dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/round_button"
+            android:contentDescription="@string/settings"
             android:src="@drawable/outline_settings_24"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/settings" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/cv_search"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginStart="20dp"
@@ -50,6 +52,19 @@
                 android:layout_height="match_parent" />
 
         </androidx.cardview.widget.CardView>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cv_search">
+
+            <include layout="@layout/chip_filter_group" />
+
+        </HorizontalScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -73,19 +88,19 @@
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|top"
+                android:importantForAccessibility="no"
                 android:scaleType="centerCrop"
-                android:src="@drawable/baseline_remove_24"
-                android:importantForAccessibility="no" />
+                android:src="@drawable/baseline_remove_24" />
 
             <TextView
                 android:id="@+id/tv_current_disaster_information"
-                android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/current_disaster_information"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:text="@string/current_disaster_information"/>
+                android:textStyle="bold" />
 
         </LinearLayout>
 
