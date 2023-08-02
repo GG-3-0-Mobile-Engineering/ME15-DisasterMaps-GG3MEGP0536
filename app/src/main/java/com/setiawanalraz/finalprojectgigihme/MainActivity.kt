@@ -2,38 +2,39 @@ package com.setiawanalraz.finalprojectgigihme
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.setiawanalraz.finalprojectgigihme.adapter.RVAdapter
-import com.setiawanalraz.finalprojectgigihme.api.client.ApiClient
-import com.setiawanalraz.finalprojectgigihme.api.model.DisasterReportModel
+import com.setiawanalraz.finalprojectgigihme.adapter.DisasterAdapter
+import com.setiawanalraz.finalprojectgigihme.api.model.DisasterReports
+import com.setiawanalraz.finalprojectgigihme.api.model.DisasterViewModel
 import com.setiawanalraz.finalprojectgigihme.databinding.ActivityMainBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var adapter: RVAdapter
-
-    private var mGoogleMap: GoogleMap? = null
+    private lateinit var mGoogleMap: GoogleMap
+    private lateinit var adapter: DisasterAdapter
     private lateinit var autocompleteFragment: AutocompleteSupportFragment
-
+    private lateinit var bottomSheet: FrameLayout
+    private lateinit var viewModel: DisasterViewModel
     private lateinit var settings: ImageButton
-    private lateinit var sheet: FrameLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,22 +67,46 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        sheet = findViewById(R.id.sheet)
-        BottomSheetBehavior.from(sheet).apply {
+        viewModel = ViewModelProvider(
+            this,
+            ViewModelProvider.NewInstanceFactory()
+        )[DisasterViewModel::class.java]
+
+        viewModel.disasterReports.observe(this) { report ->
+            if (report != null) {
+                adapter = DisasterAdapter(report)
+                showBottomSheet(report)
+            }
+        }
+
+        bottomSheet = findViewById(R.id.sheet)
+        BottomSheetBehavior.from(bottomSheet).apply {
             peekHeight = 200
             this.state = BottomSheetBehavior.STATE_COLLAPSED
         }
-
-        adapter = RVAdapter(this@MainActivity, arrayListOf())
-
-        binding.rvMain.adapter = adapter
-        binding.rvMain.setHasFixedSize(true)
-
-        getDataFromApi()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         mGoogleMap = googleMap
+
+        viewModel.getDisasterCoordinates(604800)
+        viewModel.disasterCoordinate.observe(this) {
+            it?.forEach { coordinates ->
+                if (coordinates.type == "Point") {
+                    val data = coordinates.coordinates
+                    val latitude = data[1]
+                    val longitude = data[0]
+                    val markers = LatLng(latitude, longitude)
+                    googleMap.addMarker(
+                        MarkerOptions()
+                            .position(markers)
+                            .title(coordinates.disasterReports.disasterType)
+                            .snippet("Telah terjadi bencana pada: ${coordinates.disasterReports.createdAt}")
+                    )
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(markers, 10f))
+                }
+            }
+        }
     }
 
     private fun zoomOnMap(latLng: LatLng) {
@@ -89,50 +114,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mGoogleMap?.animateCamera(newLatLngZoom)
     }
 
-//    private fun remoteGetUsers() {
-//        ApiClient.apiService.getUsers().enqueue(object : Callback<ArrayList<DisasterReportModel>> {
-//            override fun onResponse(
-//                call: Call<ArrayList<DisasterReportModel>>,
-//                response: Response<ArrayList<DisasterReportModel>>
-//            ) {
-//                if (response.isSuccessful) {
-//                    val data = response.body()
-//                    setDataToAdapter(data!!)
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<ArrayList<DisasterReportModel>>, t: Throwable) {
-//                Log.d("Error", "" + t.stackTraceToString())
-//            }
-//
-//        })
-//    }
-//
-//    private fun setDataToAdapter(data: ArrayList<DisasterReportModel>) {
-//        adapter.setData(data)
-//    }
-
-    private fun getDataFromApi() {
-        val call = ApiClient.apiService.getReports()
-
-        call.enqueue(object : Callback<List<DisasterReportModel>> {
-            override fun onResponse(
-                call: Call<List<DisasterReportModel>>,
-                response: Response<List<DisasterReportModel>>
-            ) {
-                if (response.isSuccessful) {
-                    val data = response.body()
-                    setDataToAdapter(data as ArrayList<DisasterReportModel>)
-                }
-            }
-
-            override fun onFailure(call: Call<List<DisasterReportModel>>, t: Throwable) {
-                Log.d("Error", "" + t.stackTraceToString())
-            }
-        })
-    }
-
-    private fun setDataToAdapter(data: ArrayList<DisasterReportModel>) {
-        adapter.setData(data)
+    private fun showBottomSheet(report: List<DisasterReports>) {
+        val bottomSheetContent = layoutInflater.inflate(R.layout.activity_main, null)
+        val recyclerView = bottomSheetContent.findViewById<RecyclerView>(R.id.rv_main)
+        val parentView = bottomSheetContent.parent as? ViewGroup
+        parentView?.removeView(bottomSheetContent)
+        bottomSheet.addView(bottomSheetContent)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = DisasterAdapter(report)
     }
 }

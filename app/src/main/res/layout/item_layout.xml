@@ -43,8 +43,8 @@
                 android:text="Description"
                 android:textSize="20sp" />
 
-
         </LinearLayout>
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
