@@ -2,7 +2,6 @@ package com.setiawanalraz.finalprojectgigihme
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.Toast
@@ -115,12 +114,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun showBottomSheet(report: List<DisasterReports>) {
-        val bottomSheetContent = layoutInflater.inflate(R.layout.activity_main, null)
+        val bottomSheetContent = layoutInflater.inflate(R.layout.bottom_sheet_content, null)
         val recyclerView = bottomSheetContent.findViewById<RecyclerView>(R.id.rv_main)
-        val parentView = bottomSheetContent.parent as? ViewGroup
-        parentView?.removeView(bottomSheetContent)
-        bottomSheet.addView(bottomSheetContent)
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = DisasterAdapter(report)
+
+        bottomSheet.removeAllViews()
+        bottomSheet.addView(bottomSheetContent)
+
+        BottomSheetBehavior.from(bottomSheet).apply {
+            peekHeight = 200
+            state = BottomSheetBehavior.STATE_COLLAPSED
+        }
     }
+
 }
