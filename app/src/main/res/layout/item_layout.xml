@@ -33,6 +33,7 @@
                 android:id="@+id/tv_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:text="Title"
                 android:textSize="24sp" />
 
@@ -40,6 +41,7 @@
                 android:id="@+id/tv_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:text="Description"
                 android:textSize="20sp" />
 

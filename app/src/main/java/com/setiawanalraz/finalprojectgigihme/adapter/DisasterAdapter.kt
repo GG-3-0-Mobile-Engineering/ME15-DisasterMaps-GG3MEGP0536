@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.setiawanalraz.finalprojectgigihme.R
 import com.setiawanalraz.finalprojectgigihme.api.model.DisasterReports
 import com.setiawanalraz.finalprojectgigihme.databinding.ItemLayoutBinding
 
@@ -27,7 +28,13 @@ class DisasterAdapter(private var disasters: List<DisasterReports>) :
             binding.apply {
                 Glide.with(itemView.context)
                     .load(data.imageUrl)
-                    .apply(RequestOptions()).into(ivPhoto)
+                    .apply(
+                        RequestOptions()
+                            .placeholder(R.drawable.default_image)
+                            .error(R.drawable.default_image)
+                            .override(250, 250)
+                            .centerCrop()
+                    ).into(ivPhoto)
                 tvTitle.text = data.disasterType
                 tvDescription.text = data.text
             }
