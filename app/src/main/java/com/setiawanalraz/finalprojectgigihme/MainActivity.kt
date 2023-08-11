@@ -1,10 +1,15 @@
 package com.setiawanalraz.finalprojectgigihme
 
+import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +29,7 @@ import com.setiawanalraz.finalprojectgigihme.adapter.DisasterAdapter
 import com.setiawanalraz.finalprojectgigihme.api.model.DisasterReports
 import com.setiawanalraz.finalprojectgigihme.api.model.DisasterViewModel
 import com.setiawanalraz.finalprojectgigihme.databinding.ActivityMainBinding
+import com.setiawanalraz.finalprojectgigihme.ui.settings.SettingsActivity
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -33,7 +39,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private lateinit var autocompleteFragment: AutocompleteSupportFragment
     private lateinit var bottomSheet: FrameLayout
     private lateinit var viewModel: DisasterViewModel
-    private lateinit var settings: ImageButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +87,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         BottomSheetBehavior.from(bottomSheet).apply {
             peekHeight = 200
             this.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+
+        val settings : ImageButton = findViewById(R.id.settings)
+        settings.setOnClickListener {
+            val intent = Intent(this@MainActivity, SettingsActivity::class.java)
+            startActivity(intent)
         }
     }
 
